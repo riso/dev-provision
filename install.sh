@@ -19,6 +19,7 @@ fi
 # install puppet
 if ! $(hash puppet > /dev/null 2>&1)
 then
+  echo "puppet not found, installing..."
   hash wget > /dev/null 2>&1 && env wget http://apt.puppetlabs.com/puppetlabs-release-$VERSION.deb || {
     echo "At the very least we need wget installed, can't do anything without it"
     exit
@@ -27,6 +28,9 @@ then
   rm -f puppetlabs-release-$VERSION.deb
   apt-get update
   apt-get install -y puppet
+  echo "puppet successfully installed"
+else
+  echo "puppet already present, continue"
 fi
 
 # grab puppet modules and manifets
