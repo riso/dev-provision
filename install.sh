@@ -24,6 +24,7 @@ then
     exit
   }
   dpkg -i puppetlabs-release-$VERSION.deb
+  rm -f puppetlabs-release-$VERSION.deb
   apt-get update
   apt-get install -y puppet
 fi
