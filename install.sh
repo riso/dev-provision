@@ -23,7 +23,7 @@ hash wget > /dev/null 2>&1 && env wget http://apt.puppetlabs.com/puppetlabs-rele
 }
 dpkg -i puppetlabs-release-$VERSION.deb
 apt-get update
-apt-get install puppet
+apt-get install -y puppet
 
 # grab puppet modules and manifets
 
