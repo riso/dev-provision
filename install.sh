@@ -16,14 +16,29 @@ then
   exit
 fi
 
+# test for prerequirements
+function toolpresent() {
+  hash $1 > /dev/null 2>&1 || { 
+    echo "$1 not found, but it's required to proceed. Please install it manually and rerun"
+    MISSING_PREREQ=true
+  }
+}
+
+unset MISSING_PREREQ
+toolpresent wget
+toolpresent unzip
+
+if [ $MISSING_PREREQ = true ]
+then
+  unset MISSING_PREREQ
+  exit
+fi
+
 # install puppet
 if ! $(hash puppet > /dev/null 2>&1)
 then
   echo "puppet not found, installing..."
-  hash wget > /dev/null 2>&1 && env wget http://apt.puppetlabs.com/puppetlabs-release-$VERSION.deb || {
-    echo "At the very least we need wget installed, can't do anything without it"
-    exit
-  }
+  wget http://apt.puppetlabs.com/puppetlabs-release-$VERSION.deb
   dpkg -i puppetlabs-release-$VERSION.deb
   rm -f puppetlabs-release-$VERSION.deb
   apt-get update
