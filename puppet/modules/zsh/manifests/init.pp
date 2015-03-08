@@ -1,0 +1,5 @@
+include zsh
+
+class zsh {
+
+}
