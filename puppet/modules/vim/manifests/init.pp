@@ -2,7 +2,10 @@ class vim {
 
   $vim = "$env_pwd/.vim"
 
-  if ! defined(Package['vim-nox'])        { package { 'vim-nox':  ensure => present } }
+  # vim with lua support, required by neocomplete
+  if ! defined(Package['vim-nox'])                { package { 'vim-nox':          ensure => present } }
+  # ctags are required by tagbar
+  if ! defined(Package['exuberant-ctags'])        { package { 'exuberant-ctags':  ensure => present } }
 
   # create .vim dir
   file { "$vim":
