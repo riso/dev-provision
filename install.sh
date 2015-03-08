@@ -4,7 +4,7 @@ set -e
 if [ $(uname -o) = "Cygwin" ]
 then
   echo "Cygwin not yet supported"
-  exit
+  exit -1
 fi
 
 OS=$(lsb_release -si)
@@ -13,7 +13,7 @@ VERSION=$(lsb_release -sc)
 if ! [[ $OS =~ (Ubuntu|Debian) ]]
 then
   echo "$OS not yet supported"
-  exit
+  exit -1
 fi
 
 # test for prerequirements
