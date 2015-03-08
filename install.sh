@@ -54,3 +54,4 @@ unzip puppet.zip
 
 # provision with puppet
 puppet apply --modulepath=puppet/modules puppet/manifests/base.pp
+rm -rf puppet/ puppet.zip
