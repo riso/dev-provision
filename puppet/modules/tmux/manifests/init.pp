@@ -1,5 +1,7 @@
 class tmux {
 
+  if ! defined(Package['tmux'])       { package { 'tmux': ensure => present } }
+
   # setup .tmux.conf
   file { "$env_pwd/.tmux.conf":
     ensure  => link,

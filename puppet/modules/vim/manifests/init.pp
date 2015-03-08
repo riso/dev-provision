@@ -2,6 +2,8 @@ class vim {
 
   $vim = "$env_pwd/.vim"
 
+  if ! defined(Package['vim-nox'])        { package { 'vim-nox':  ensure => present } }
+
   # create .vim dir
   file { "$vim":
     ensure => directory,

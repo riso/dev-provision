@@ -2,6 +2,8 @@ class zsh {
 
   $oh_my_zsh = "$env_pwd/.oh-my-zsh"
 
+  if ! defined(Package['zsh'])        { package { 'zsh':  ensure => present } }
+
   # download oh-my-zsh
   vcsrepo { "$oh_my_zsh":
     ensure    => present,
