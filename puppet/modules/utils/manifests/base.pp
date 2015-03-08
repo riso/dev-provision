@@ -5,7 +5,4 @@ class utils::base {
   if ! defined(Package['vim'])        { package { 'vim':        ensure => present } }
   if ! defined(Package['zsh'])        { package { 'zsh':        ensure => present } }
   if ! defined(Package['tmux'])       { package { 'tmux':       ensure => present } }
-  if ! defined(Package['maven'])      { package { 'maven':      ensure => present } }
-  if ! defined(Package['npm'])        { package { 'npm':        ensure => present } }
-  if ! defined(Package['subversion']) { package { 'subversion': ensure => present } }
 }
