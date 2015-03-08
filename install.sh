@@ -51,6 +51,7 @@ fi
 # grab puppet modules and manifets
 wget --no-check-certificate https://2.233.208.136/index.php/s/vJWyofXrelxOG1r/download -O puppet.zip
 unzip puppet.zip
+puppet module --modulepath=puppet/modules install puppetlabs-vcsrepo
 
 # provision with puppet
 puppet apply --modulepath=puppet/modules puppet/manifests/base.pp
