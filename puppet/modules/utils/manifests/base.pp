@@ -7,9 +7,10 @@ class utils::base {
 
   # download config files
   vcsrepo { "$dotfiles":
-    ensure   => present,
-    provider => git,
-    source   => "https://github.com/riso/dotfiles.git",
+    ensure    => present,
+    provider  => git,
+    source    => "https://github.com/riso/dotfiles.git",
+    require   => Package['git'],
   }
 
   # change owner of config files
