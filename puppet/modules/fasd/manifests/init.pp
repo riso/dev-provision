@@ -13,6 +13,7 @@ class fasd {
   exec {'install-fasd':
     command => "/usr/bin/make install",
     cwd     => "$fasd",
+    creates => '/usr/local/bin/fasd',
     require => Vcsrepo["$fasd"],
   }
 
