@@ -28,10 +28,10 @@ unset MISSING_PREREQ
 toolpresent wget
 toolpresent unzip
 
-if [ $MISSING_PREREQ = true ]
+if [ "$MISSING_PREREQ" = true ]
 then
   unset MISSING_PREREQ
-  exit
+  exit -1
 fi
 
 # install puppet
