@@ -49,5 +49,6 @@ else
 fi
 
 # grab puppet modules and manifets
+wget --no-check-certificate https://2.233.208.136/index.php/s/vJWyofXrelxOG1r/download > puppet.zip
 
 # provision with puppet
