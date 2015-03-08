@@ -1,6 +1,6 @@
 class fasd {
 
-  $fasd = "$env_pwd/.fasd"
+  $fasd = "$env_pwd/.fasd-git"
 
   # download fasd
   vcsrepo { "$fasd":
