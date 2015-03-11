@@ -7,17 +7,23 @@ then
   exit -1
 fi
 
-OS=$(lsb_release -si)
-VERSION=$(lsb_release -sc)
+OS=`cat /etc/os-release | awk '/^ID=/' | sed 's/ID=//'`
 
-if ! [[ $OS =~ (Ubuntu|Debian) ]]
-then
-  echo "$OS not yet supported"
-  exit -1
-fi
+case $OS in
+  ubuntu|debian )
+    VERSION=$(lsb_release -sc)
+    ;;
+  fedora )
+    VERSION=`cat /etc/os-release | awk '/^VERSION_ID=/' | sed 's/VERSION_ID=//'`
+    ;;
+  * )
+    echo "$OS not yet supported"
+    exit -1
+    ;;
+esac
 
 # test for prerequirements
-function toolpresent() {
+function toolpresent {
   hash $1 > /dev/null 2>&1 || { 
     echo "$1 not found, but it's required to proceed. Please install it manually and rerun"
     MISSING_PREREQ=true
