@@ -44,17 +44,26 @@ fi
 if ! $(hash puppet > /dev/null 2>&1)
 then
   echo "puppet not found, installing..."
-  wget http://apt.puppetlabs.com/puppetlabs-release-$VERSION.deb
-  dpkg -i puppetlabs-release-$VERSION.deb
-  rm -f puppetlabs-release-$VERSION.deb
-  apt-get update
-  apt-get install -y puppet
+  case $OS in
+    ubuntu|debian )
+      wget http://apt.puppetlabs.com/puppetlabs-release-$VERSION.deb
+      dpkg -i puppetlabs-release-$VERSION.deb
+      rm -f puppetlabs-release-$VERSION.deb
+      apt-get update
+      apt-get install -y puppet
+      ;;
+    fedora )
+       rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-fedora-$VERSION.noarch.rpm
+       yum install -y puppet
+      ;;
+  esac
   echo "puppet successfully installed"
 else
   echo "puppet already present, continue"
 fi
 
 # grab puppet modules and manifets
+# TODO change to bintray distribution
 wget --no-check-certificate https://2.233.208.136/index.php/s/vJWyofXrelxOG1r/download -O puppet.zip
 unzip puppet.zip
 puppet module --modulepath=puppet/modules install puppetlabs-vcsrepo
