@@ -3,9 +3,20 @@ class vim {
   $vim = "$env_pwd/.vim"
 
   # vim with lua support, required by neocomplete
-  if ! defined(Package['vim-nox'])                { package { 'vim-nox':          ensure => present } }
+  case $operatingsystem {
+    'Debian', 'Ubuntu': {
+      if ! defined(Package['vim-nox'])            { package { 'vim-nox':          ensure => present } }
+    }
+  }
   # ctags are required by tagbar
-  if ! defined(Package['exuberant-ctags'])        { package { 'exuberant-ctags':  ensure => present } }
+  case $operatingsystem {
+    'Debian', 'Ubuntu': {
+      if ! defined(Package['exuberant-ctags'])    { package { 'exuberant-ctags':  ensure => present } }
+    }
+    'Fedora': {
+      if ! defined(Package['ctags-etags'])        { package { 'ctags-etags':      ensure => present } }
+    }
+  }
 
   # create .vim dir
   file { "$vim":
