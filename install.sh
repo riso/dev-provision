@@ -23,7 +23,7 @@ case $OS in
 esac
 
 # test for prerequirements
-function ensuretool {
+ensuretool() {
   hash $1 > /dev/null 2>&1 || { 
     echo "$1 not found, but it's required to proceed. Installing it now..."
     case $OS in
