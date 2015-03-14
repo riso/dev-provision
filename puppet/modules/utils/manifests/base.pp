@@ -22,4 +22,21 @@ class utils::base {
     require => Vcsrepo["$dotfiles"],
   }
 
+  # setup gitconfig
+  file { "$env_pwd/.gitconfig":
+    ensure  => link,
+    target  => "$dotfiles/gitconfig",
+    owner   => "$env_sudo_user",
+    group   => "$env_sudo_user",
+    require => Vcsrepo["$dotfiles"],
+  }
+
+  # setup global gitignore
+  file { "$env_pwd/.gitignore_global":
+    ensure  => link,
+    target  => "$dotfiles/gitignore_global",
+    owner   => "$env_sudo_user",
+    group   => "$env_sudo_user",
+    require => Vcsrepo["$dotfiles"],
+  }
 }
