@@ -23,22 +23,22 @@ case $OS in
 esac
 
 # test for prerequirements
-function toolpresent {
+function ensuretool {
   hash $1 > /dev/null 2>&1 || { 
-    echo "$1 not found, but it's required to proceed. Please install it manually and rerun"
-    MISSING_PREREQ=true
+    echo "$1 not found, but it's required to proceed. Installing it now..."
+    case $OS in
+      ubuntu|debian )
+        apt-get install -y $1
+        ;;
+      fedora )
+        yum install -y $1
+        ;;
+    esac
   }
 }
 
-unset MISSING_PREREQ
-toolpresent wget
-toolpresent unzip
-
-if [ "$MISSING_PREREQ" = true ]
-then
-  unset MISSING_PREREQ
-  exit -1
-fi
+ensuretool wget
+ensuretool unzip
 
 # install puppet
 if ! $(hash puppet > /dev/null 2>&1)
