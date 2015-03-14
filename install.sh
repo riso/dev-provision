@@ -72,3 +72,7 @@ puppet module --modulepath=puppet/modules install puppetlabs-vcsrepo
 export FACTERLIB="$PWD/puppet/facter"
 puppet apply --modulepath=puppet/modules puppet/manifests/base.pp
 rm -rf puppet/ puppet.zip
+
+echo "system provisioned correctly!"
+echo "to complete configuration you still have to configure authentication data:"
+echo "  * SSH keys"
