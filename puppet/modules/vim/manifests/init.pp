@@ -7,6 +7,9 @@ class vim {
     'Debian', 'Ubuntu': {
       if ! defined(Package['vim-nox'])            { package { 'vim-nox':          ensure => present } }
     }
+    'Fedora': {
+      if ! defined(Package['vim-enhanced'])       { package { 'vim-enhanced':     ensure => present } }
+    }
   }
   # ctags are required by tagbar
   case $operatingsystem {
@@ -50,5 +53,17 @@ class vim {
     owner   => "$env_sudo_user",
     group   => "$env_sudo_user",
     require => File["$utils::base::dotfiles"],
+  }
+
+  case $operatingsystem {
+    'Fedora': {
+      # make sure that vi points to vim
+      file { "/usr/bin/vi":
+        ensure  => link,
+        replace => true,
+        target  => "/usr/bin/vim",
+        require => Package['vim-enhanced'],
+      }
+    }
   }
 }
