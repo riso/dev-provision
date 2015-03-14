@@ -9,7 +9,7 @@ class utils::base {
   vcsrepo { "$dotfiles":
     ensure    => present,
     provider  => git,
-    source    => "git@github.com:riso/dotfiles.git",
+    source    => "https://github.com/riso/dotfiles.git",
     require   => Package['git'],
   }
 
