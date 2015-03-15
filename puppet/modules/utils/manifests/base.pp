@@ -1,4 +1,6 @@
 class utils::base {
+  require epel
+
   if ! defined(Package['htop'])       { package { 'htop':       ensure => present } }
   if ! defined(Package['iotop'])      { package { 'iotop':      ensure => present } }
   if ! defined(Package['git'])        { package { 'git':        ensure => present } }

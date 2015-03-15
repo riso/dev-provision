@@ -12,7 +12,17 @@ then
   exit -1
 fi
 
-OS=`cat /etc/os-release | awk '/^ID=/' | sed 's/ID=//'`
+if [ -r "/etc/os-release" ]
+then
+  # ubuntu, debian, fedora
+  OS=`cat /etc/os-release | awk '/^ID=/' | sed 's/ID=//'`
+fi
+if [ -r "/etc/redhat-release" ]
+then
+  # rhel, centos
+  OS=`cat /etc/redhat-release | sed "s/\([a-zA-Z]*\).*/\L\1/"`
+fi
+  
 
 case $OS in
   ubuntu|debian )
@@ -20,6 +30,9 @@ case $OS in
     ;;
   fedora )
     VERSION=`cat /etc/os-release | awk '/^VERSION_ID=/' | sed 's/VERSION_ID=//'`
+    ;;
+  centos )
+    VERSION=`cat /etc/redhat-release | sed "s/[a-zA-Z ]*\([0-9]*\).*/\1/"`
     ;;
   * )
     echo "$OS not yet supported"
@@ -35,7 +48,7 @@ ensuretool() {
       ubuntu|debian )
         apt-get install -y $1
         ;;
-      fedora )
+      fedora|centos )
         yum install -y $1
         ;;
     esac
@@ -61,6 +74,10 @@ then
        rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-fedora-$VERSION.noarch.rpm
        yum install -y puppet
       ;;
+    centos )
+       rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-el-$VERSION.noarch.rpm
+       yum install -y puppet
+      ;;
   esac
   echo "puppet successfully installed"
 else
@@ -68,9 +85,18 @@ else
 fi
 
 # grab puppet modules and manifets
-wget https://s3-eu-west-1.amazonaws.com/dev-provision/puppet.tar.gz -O puppet.tar.gz
+if [ $OS = "centos" ];
+then 
+  # this is stupid but its due to this bug https://bugzilla.redhat.com/show_bug.cgi?id=903756
+  WGET="wget --no-check-certificate"
+else
+  WGET=wget
+fi
+$WGET https://s3-eu-west-1.amazonaws.com/dev-provision/puppet.tar.gz -O puppet.tar.gz
 tar -xvf puppet.tar.gz
 puppet module --modulepath=puppet/modules install puppetlabs-vcsrepo
+puppet module --modulepath=puppet/modules install stahnma-epel
+echo "downloaded and extracted modules, preparing to install them..."
 
 # provision with puppet
 export FACTERLIB="$PWD/puppet/facter"

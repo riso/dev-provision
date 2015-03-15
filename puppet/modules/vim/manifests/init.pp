@@ -7,7 +7,7 @@ class vim {
     'Debian', 'Ubuntu': {
       if ! defined(Package['vim-nox'])            { package { 'vim-nox':          ensure => present } }
     }
-    'Fedora': {
+    'Fedora', 'CentOS': {
       if ! defined(Package['vim-enhanced'])       { package { 'vim-enhanced':     ensure => present } }
     }
   }
@@ -18,6 +18,9 @@ class vim {
     }
     'Fedora': {
       if ! defined(Package['ctags-etags'])        { package { 'ctags-etags':      ensure => present } }
+    }
+    'CentOS': {
+      if ! defined(Package['ctags'])              { package { 'ctags':            ensure => present } }
     }
   }
 
@@ -56,7 +59,7 @@ class vim {
   }
 
   case $operatingsystem {
-    'Fedora': {
+    'Fedora', 'CentOS': {
       # make sure that vi points to vim
       file { "/usr/bin/vi":
         ensure  => link,
