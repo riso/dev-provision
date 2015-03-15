@@ -1,5 +1,8 @@
 set -e
 
+# make sure that we're in user's $HOME
+cd $HOME
+
 # detect OS
 if [ $(uname -o) = "Cygwin" ]
 then
@@ -38,7 +41,7 @@ ensuretool() {
 }
 
 ensuretool wget
-ensuretool unzip
+ensuretool tar
 
 # install puppet
 if ! $(hash puppet > /dev/null 2>&1)
@@ -63,9 +66,8 @@ else
 fi
 
 # grab puppet modules and manifets
-# TODO change to bintray distribution
-wget --no-check-certificate https://2.233.208.136/index.php/s/vJWyofXrelxOG1r/download -O puppet.zip
-unzip puppet.zip
+wget https://s3-eu-west-1.amazonaws.com/dev-provision/puppet.tar.gz -O puppet.tar.gz
+tar -xvf puppet.tar.gz
 puppet module --modulepath=puppet/modules install puppetlabs-vcsrepo
 
 # provision with puppet
