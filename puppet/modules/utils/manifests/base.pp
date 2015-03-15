@@ -12,16 +12,8 @@ class utils::base {
     ensure    => present,
     provider  => git,
     source    => "https://github.com/riso/dotfiles.git",
+    user      => "$env_sudo_user",
     require   => Package['git'],
-  }
-
-  # change owner of config files
-  file { "$dotfiles": 
-    ensure  => directory,
-    recurse => true,
-    owner   => "$env_sudo_user",
-    group   => "$env_sudo_user",
-    require => Vcsrepo["$dotfiles"],
   }
 
   # setup gitconfig

@@ -9,6 +9,7 @@ class fasd {
     ensure    => present,
     provider  => git,
     source    => "https://github.com/clvv/fasd.git",
+    user      => "$env_sudo_user",
     require   => Package['git'],
   }
 

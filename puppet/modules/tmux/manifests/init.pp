@@ -15,7 +15,7 @@ class tmux {
     target  => "$utils::base::dotfiles/tmux.conf",
     owner   => "$env_sudo_user",
     group   => "$env_sudo_user",
-    require => File["$utils::base::dotfiles"],
+    require => Vcsrepo["$utils::base::dotfiles"],
   }
 
   # setup .tmux
@@ -24,14 +24,14 @@ class tmux {
     target  => "$utils::base::dotfiles/tmux",
     owner   => "$env_sudo_user",
     group   => "$env_sudo_user",
-    require => File["$utils::base::dotfiles"],
+    require => Vcsrepo["$utils::base::dotfiles"],
   }
 
   # compile terminfo for screen-256colors
   exec { "compile-terminfo":
     command => "/usr/bin/tic $utils::base::dotfiles/screen-256color.ti",
     creates => "$terminfo_path",
-    require => File["$utils::base::dotfiles"],
+    require => Vcsrepo["$utils::base::dotfiles"],
   }
 
 }

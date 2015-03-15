@@ -37,7 +37,7 @@ class vim {
     target  => "$utils::base::dotfiles/vimrc",
     owner   => "$env_sudo_user",
     group   => "$env_sudo_user",
-    require => File["$utils::base::dotfiles"],
+    require => Vcsrepo["$utils::base::dotfiles"],
   }
 
   # setup bundle dir
@@ -46,7 +46,7 @@ class vim {
     target  => "$utils::base::dotfiles/bundle",
     owner   => "$env_sudo_user",
     group   => "$env_sudo_user",
-    require => File["$utils::base::dotfiles"],
+    require => Vcsrepo["$utils::base::dotfiles"],
   }
 
   # setup autoload dir
@@ -55,7 +55,7 @@ class vim {
     target  => "$utils::base::dotfiles/autoload",
     owner   => "$env_sudo_user",
     group   => "$env_sudo_user",
-    require => File["$utils::base::dotfiles"],
+    require => Vcsrepo["$utils::base::dotfiles"],
   }
 
   case $operatingsystem {

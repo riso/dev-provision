@@ -55,16 +55,8 @@ class zsh {
     ensure    => present,
     provider  => git,
     source    => "https://github.com/robbyrussell/oh-my-zsh.git",
+    user      => "$env_sudo_user",
     require   => Package['git'],
-  }
-
-  # change owner of oh-my-zsh
-  file { "$oh_my_zsh": 
-    ensure  => directory,
-    recurse => true,
-    owner   => "$env_sudo_user",
-    group   => "$env_sudo_user",
-    require => Vcsrepo["$oh_my_zsh"],
   }
 
   # change user default shell
@@ -80,6 +72,6 @@ class zsh {
     target  => "$utils::base::dotfiles/zshrc",
     owner   => "$env_sudo_user",
     group   => "$env_sudo_user",
-    require => File["$utils::base::dotfiles"],
+    require => Vcsrepo["$utils::base::dotfiles"],
   }
 }
