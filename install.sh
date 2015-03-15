@@ -1,6 +1,7 @@
 set -e
 
 # make sure that we're in user's $HOME
+OLD_PWD=$PWD
 cd $HOME
 
 # detect OS
@@ -74,5 +75,8 @@ puppet module --modulepath=puppet/modules install puppetlabs-vcsrepo
 export FACTERLIB="$PWD/puppet/facter"
 puppet apply --modulepath=puppet/modules puppet/manifests/base.pp
 rm -rf puppet/ puppet.zip
+
+# restore user directory
+cd $OLD_PWD
 
 echo "system provisioned correctly!"
