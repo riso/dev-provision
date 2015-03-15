@@ -64,19 +64,19 @@ then
   echo "puppet not found, installing..."
   case $OS in
     ubuntu|debian )
-      wget http://apt.puppetlabs.com/puppetlabs-release-$VERSION.deb
-      dpkg -i puppetlabs-release-$VERSION.deb
+      wget -q http://apt.puppetlabs.com/puppetlabs-release-$VERSION.deb
+      dpkg -i puppetlabs-release-$VERSION.deb > /dev/null
       rm -f puppetlabs-release-$VERSION.deb
-      apt-get update
-      apt-get install -y puppet
+      apt-get update > /dev/null
+      apt-get install -y puppet > /dev/null
       ;;
     fedora )
-       rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-fedora-$VERSION.noarch.rpm
-       yum install -y puppet
+       rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-fedora-$VERSION.noarch.rpm > /dev/null
+       yum install -y puppet > /dev/null
       ;;
     centos )
-       rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-el-$VERSION.noarch.rpm
-       yum install -y puppet
+       rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-el-$VERSION.noarch.rpm > /dev/null
+       yum install -y puppet > /dev/null
       ;;
   esac
   echo "puppet successfully installed"
@@ -92,10 +92,10 @@ then
 else
   WGET=wget
 fi
-$WGET https://s3-eu-west-1.amazonaws.com/dev-provision/puppet.tar.gz -O puppet.tar.gz
-tar -xvf puppet.tar.gz
-puppet module --modulepath=puppet/modules install puppetlabs-vcsrepo
-puppet module --modulepath=puppet/modules install stahnma-epel
+$WGET -q https://s3-eu-west-1.amazonaws.com/dev-provision/puppet.tar.gz -O puppet.tar.gz
+tar -xf puppet.tar.gz
+puppet module --modulepath=puppet/modules install puppetlabs-vcsrepo > /dev/null 2>&1
+puppet module --modulepath=puppet/modules install stahnma-epel > /dev/null 2>&1
 echo "downloaded and extracted modules, preparing to install them..."
 
 # provision with puppet
