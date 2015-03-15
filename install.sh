@@ -2,7 +2,8 @@ set -e
 
 # make sure that we're in user's $HOME
 OLD_PWD=$PWD
-cd $HOME
+# FIXME this assumes that we're running under sudo!
+cd /home/$SUDO_USER
 
 # detect OS
 if [ $(uname -o) = "Cygwin" ]
