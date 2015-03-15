@@ -75,7 +75,7 @@ puppet module --modulepath=puppet/modules install puppetlabs-vcsrepo
 # provision with puppet
 export FACTERLIB="$PWD/puppet/facter"
 puppet apply --modulepath=puppet/modules puppet/manifests/base.pp
-rm -rf puppet/ puppet.zip
+rm -rf puppet/ puppet.tar.gz
 
 # restore user directory
 cd $OLD_PWD
