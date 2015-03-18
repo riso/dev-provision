@@ -1,5 +1,29 @@
 set -e
 
+CLASS=base
+
+while true; do
+  case "$1" in
+    -c | --class ) 
+      [ -n "$2" ] || {
+        echo "option $1 requires an argument"
+        exit -1
+      }
+      CLASS="$2"
+      shift 2
+      ;;
+    -- ) 
+      shift
+      break 
+      ;;
+    * ) 
+      break 
+      ;;
+  esac
+done
+
+echo "selected class is $2"
+
 # make sure that we're in user's $HOME
 OLD_PWD=$PWD
 # FIXME this assumes that we're running under sudo!
@@ -22,7 +46,7 @@ then
   # rhel, centos
   OS=`cat /etc/redhat-release | sed "s/\([a-zA-Z]*\).*/\L\1/"`
 fi
-  
+
 
 case $OS in
   ubuntu|debian )
@@ -43,16 +67,16 @@ esac
 # test for prerequirements
 ensuretool() {
   hash $1 > /dev/null 2>&1 || { 
-    echo "$1 not found, but it's required to proceed. Installing it now..."
-    case $OS in
-      ubuntu|debian )
-        apt-get install -y $1
-        ;;
-      fedora|centos )
-        yum install -y $1
-        ;;
-    esac
-  }
+  echo "$1 not found, but it's required to proceed. Installing it now..."
+  case $OS in
+    ubuntu|debian )
+      apt-get install -y $1
+      ;;
+    fedora|centos )
+      yum install -y $1
+      ;;
+  esac
+}
 }
 
 ensuretool wget
@@ -71,12 +95,12 @@ then
       apt-get install -y puppet > /dev/null
       ;;
     fedora )
-       rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-fedora-$VERSION.noarch.rpm > /dev/null
-       yum install -y puppet > /dev/null
+      rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-fedora-$VERSION.noarch.rpm > /dev/null
+      yum install -y puppet > /dev/null
       ;;
     centos )
-       rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-el-$VERSION.noarch.rpm > /dev/null
-       yum install -y puppet > /dev/null
+      rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-el-$VERSION.noarch.rpm > /dev/null
+      yum install -y puppet > /dev/null
       ;;
   esac
   echo "puppet successfully installed"
@@ -100,7 +124,7 @@ echo "downloaded and extracted modules, preparing to install them..."
 
 # provision with puppet
 export FACTERLIB="$PWD/puppet/facter"
-puppet apply --modulepath=puppet/modules puppet/manifests/base.pp
+puppet apply --modulepath=puppet/modules puppet/manifests/$CLASS.pp
 rm -rf puppet/ puppet.tar.gz
 
 # restore user directory
