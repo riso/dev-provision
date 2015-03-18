@@ -22,7 +22,7 @@ while true; do
   esac
 done
 
-echo "selected class is $2"
+echo "selected class is $CLASS"
 
 # make sure that we're in user's $HOME
 OLD_PWD=$PWD
