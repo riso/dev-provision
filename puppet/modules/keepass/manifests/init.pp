@@ -16,9 +16,10 @@ class keepass {
   }
 
   exec { "download-keeagent":
-    command  => "/usr/bin/wget http://lechnology.com/wp-content/uploads/2015/02/KeeAgent_v0.6.0.zip -O /usr/lib/${keepass_name}/KeeAgent.zip",
-    creates  => "/usr/lib/${keepass_name}/KeeAgent.zip",
-    require  => [Package['wget'],Package["$keepass_name"]],
+    command   => "/usr/bin/wget http://lechnology.com/wp-content/uploads/2015/02/KeeAgent_v0.6.0.zip -O /usr/lib/${keepass_name}/KeeAgent.zip",
+    creates   => "/usr/lib/${keepass_name}/KeeAgent.zip",
+    unless    => "/usr/bin/test -f /usr/lib/${keepass_name}/KeeAgent.plgx",
+    require   => [Package['wget'],Package["$keepass_name"]],
   }
 
   exec { "extract-keeagent":
