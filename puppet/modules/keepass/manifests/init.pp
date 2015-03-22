@@ -1,5 +1,7 @@
 class keepass {
 
+  require augeas
+
   $keepass_name = $operatingsystem ? {
     fedora  => 'keepass',
     default => 'keepass2',
@@ -26,11 +28,30 @@ class keepass {
     command  => "/usr/bin/unzip /usr/lib/${keepass_name}/KeeAgent.zip KeeAgent.plgx -d /usr/lib/${keepass_name}/",
     creates  => "/usr/lib/${keepass_name}/KeeAgent.plgx",
     require  => [Package['unzip'],Exec['download-keeagent']],
+    before    => File["/usr/lib/${keepass_name}/KeeAgent.zip"],
   }
 
   file { "/usr/lib/${keepass_name}/KeeAgent.zip":
     ensure   => absent,
-    require  => [Exec['extract-keeagent']],
   }
 
+  # disable gnome keyring daemon for the user
+  file { ["/home/$env_sudo_user/.config", "/home/$env_sudo_user/.config/autostart"]:
+    ensure  => directory,
+  }
+
+  file { "/home/${env_sudo_user}/.config/autostart/gnome-keyring-ssh.desktop":
+    ensure  => present,
+    source  => "/etc/xdg/autostart/gnome-keyring-ssh.desktop",
+    require => File["/home/$env_sudo_user/.config/autostart"],
+  }
+                                                                            
+  augeas { "disable-gnome-keyring":
+    lens    => "Desktop.lns",
+    incl    => "/home/${env_sudo_user}/.config/autostart/gnome-keyring-ssh.desktop",
+    changes => [
+        "set \"/files/home/${env_sudo_user}/.config/autostart/gnome-keyring-ssh.desktop/Desktop Entry/X-GNOME-Autostart-enabled\" false"
+      ],
+    require => File["/home/${env_sudo_user}/.config/autostart/gnome-keyring-ssh.desktop"],
+  }
 }
