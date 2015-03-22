@@ -120,6 +120,7 @@ $WGET -q https://s3-eu-west-1.amazonaws.com/dev-provision/puppet.tar.gz -O puppe
 tar -xf puppet.tar.gz
 puppet module --modulepath=puppet/modules install puppetlabs-vcsrepo > /dev/null 2>&1
 puppet module --modulepath=puppet/modules install stahnma-epel > /dev/null 2>&1
+puppet module --modulepath=puppet/modules install camptocamp-augeas > /dev/null 2>&1
 echo "downloaded and extracted modules, preparing to install them..."
 
 # provision with puppet
