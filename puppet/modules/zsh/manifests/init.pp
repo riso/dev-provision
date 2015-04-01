@@ -1,42 +1,54 @@
 class zsh {
 
   $oh_my_zsh  = "$env_pwd/.oh-my-zsh"
-  $zsh_bin    = $operatingsystem ? {
-    centos  => '/usr/local/bin/zsh',
-    default => "/usr/bin/zsh",
-  }
+  $zsh_bin    = '/usr/bin/zsh'
 
   case $operatingsystem {
     'CentOS': {
-      # on centos there is no updated zsh package, so we need to compile from source
-      if ! defined(Package['tar'])            { package { 'tar':            ensure => present } }
-      if ! defined(Package['wget'])           { package { 'wget':           ensure => present } }
-      if ! defined(Package['gcc'])            { package { 'gcc':            ensure => present } }
-      if ! defined(Package['make'])           { package { 'make':           ensure => present } }
-      if ! defined(Package['ncurses-devel'])  { package { 'ncurses-devel':  ensure => present } }
+      case $operatingsystemrelease {
+        /^7.*/: {
+          if ! defined(Package['zsh'])            { package { 'zsh':            ensure => present } }
 
-      exec { "download-zsh":
-        command => "/usr/bin/wget http://sourceforge.net/projects/zsh/files/zsh/5.0.7/zsh-5.0.7.tar.bz2/download && /bin/tar xvjf zsh-5.0.7.tar.bz2",
-        creates => "$env_pwd/zsh-5.0.7",
-        require => [Package['tar'],Package['wget']],
-      }
+          file { "$zsh_bin":
+            ensure  => present,
+            require => Package['zsh'],
+          }
+        }
 
-      exec { "compile-zsh":
-        command => "$env_pwd/zsh-5.0.7/configure --with-tcsetpgrp && make && make install",
-        cwd     => "$env_pwd/zsh-5.0.7",
-        creates => "/usr/local/bin/zsh",
-        require => [Package['make'],Package['ncurses-devel'],Package['gcc'],Exec['download-zsh']],
-      }
+        default: {
+          # on older centos there is no updated zsh package, so we need to compile from source
+          $zsh_bin    = '/usr/local/bin/zsh'
 
-      exec { "add-zsh-shell":
-        command => "/bin/echo \"$zsh_bin\" >> /etc/shells",
-        onlyif  => "/usr/bin/test -z `cat /etc/shells | /bin/grep '$zsh_bin'`",
-        require => Exec['compile-zsh'],
-      }
+          if ! defined(Package['tar'])            { package { 'tar':            ensure => present } }
+          if ! defined(Package['wget'])           { package { 'wget':           ensure => present } }
+          if ! defined(Package['gcc'])            { package { 'gcc':            ensure => present } }
+          if ! defined(Package['make'])           { package { 'make':           ensure => present } }
+          if ! defined(Package['ncurses-devel'])  { package { 'ncurses-devel':  ensure => present } }
 
-      file { "$zsh_bin":
-        ensure  => present,
-        require => Exec['add-zsh-shell'],
+          exec { "download-zsh":
+            command => "/usr/bin/wget http://sourceforge.net/projects/zsh/files/zsh/5.0.7/zsh-5.0.7.tar.bz2/download -O zsh-5.0.7.tar.bz2 && /bin/tar xvjf zsh-5.0.7.tar.bz2",
+            creates => "$env_pwd/zsh-5.0.7",
+            require => [Package['tar'],Package['wget']],
+          }
+
+          exec { "compile-zsh":
+            command => "$env_pwd/zsh-5.0.7/configure --with-tcsetpgrp && make && make install",
+            cwd     => "$env_pwd/zsh-5.0.7",
+            creates => "/usr/local/bin/zsh",
+            require => [Package['make'],Package['ncurses-devel'],Package['gcc'],Exec['download-zsh']],
+          }
+
+          exec { "add-zsh-shell":
+            command => "/bin/echo \"$zsh_bin\" >> /etc/shells",
+            onlyif  => "/usr/bin/test -z `cat /etc/shells | /bin/grep '$zsh_bin'`",
+            require => Exec['compile-zsh'],
+          }
+
+          file { "$zsh_bin":
+            ensure  => present,
+            require => Exec['add-zsh-shell'],
+          }
+        }
       }
 
     }
